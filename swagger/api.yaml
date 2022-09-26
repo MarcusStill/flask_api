@@ -1,26 +1,33 @@
 openapi: 3.0.3
 info:
-  title: Документация к Flask API
+  title: Документация к проекту Flask API
   description: |-
     Этот проект представляет собой трекер задач.
-    В Docker развернуты следущие сервисы:
+    
+    Для виртуализации используется Docker и docker-compose. В приложении flask-api используются следующие контейнеры:
     - my-api - REST API на основе [flask](https://flask.palletsprojects.com/en/2.2.x/), которое реализует CRUD операции с БД.
     - db - БД PostgreSQL.
     - [swagger-ui](https://swagger.io). Документация к API.
     
-    В базе данных используются две таблицы.
+    ### База данных ### 
+    В БД используются две таблицы.
     1. Таблица задач (tasks). Имеет следующие колонки: id, название, родительская задача, зависимая задача, исполнитель, срок, статус.
     2. Таблица исполнителей (employees). Имеет следующие колонки: id, фамилия, имя, отчество, должность.
     Для работы с БД используется ORM [SQLAlchemy](https://sqlalchemy.org/).
 
+     ### Особенности ### 
     В файле model.py описаны классы таблиц и функции для работы с ними.
-    
     
     В файле app.py описаны роуты для API.
 
     В файле requirements.txt описаны все зависимости проекта.
 
     Все методы возвращают данные в json формате.
+
+    ### Адреса ### 
+    API доступен по адресу http://127.0.0.1:80/ (или 0.0.0.0).
+    
+    Документация доступна по следующему адресу: http://localhost:8002/
     
 tags:
   - name: tasks
@@ -64,11 +71,7 @@ paths:
       parameters:
         - name: Id
           in: path
-          description: ID of pet that needs to be updated
-          required: true
-          schema:
-            type: integer
-            format: int64
+          description: ID сотрудника, информацию которого следует обновить
       responses:
         '200':
           description: Операция выполнена успешно
