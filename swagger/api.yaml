@@ -1,0 +1,186 @@
+openapi: 3.0.3
+info:
+  title: Документация к Flask API
+  description: |-
+    Этот проект представляет собой трекер задач.
+    В Docker развернуты следущие сервисы:
+    - my-api - REST API на основе [flask](https://flask.palletsprojects.com/en/2.2.x/), которое реализует CRUD операции с БД.
+    - db - БД PostgreSQL.
+    - [swagger-ui](https://swagger.io). Документация к API.
+    
+    В базе данных используются две таблицы.
+    1. Таблица задач (tasks). Имеет следующие колонки: id, название, родительская задача, зависимая задача, исполнитель, срок, статус.
+    2. Таблица исполнителей (employees). Имеет следующие колонки: id, фамилия, имя, отчество, должность.
+    Для работы с БД используется ORM [SQLAlchemy](https://sqlalchemy.org/).
+
+    В файле model.py описаны классы таблиц и функции для работы с ними.
+    
+    
+    В файле app.py описаны роуты для API.
+
+    В файле requirements.txt описаны все зависимости проекта.
+
+    Все методы возвращают данные в json формате.
+    
+tags:
+  - name: tasks
+    description: эндпоинт для работы с задачами
+    externalDocs:
+      description: Find out more about our store
+  - name: employees
+    description: эндпоинт для работы с сотрудниками
+paths:
+  /employees:
+    get:
+      tags:
+        - employees
+      summary: Получение списка всех сотрудников
+      description: Получение списка всех сотрудников из БД
+      operationId: findPetsByStatus
+      responses:
+        '200':
+          description: операция выполнена успешно
+  /employees/{Id}:
+    get:
+      tags:
+        - employees
+      summary: Поиск сотрудника по ID
+      description: Возращает информацию о сотруднике из БД
+      operationId: getPetById
+      parameters:
+        - name: Id
+          in: path
+          description: ID сотрудника для поиска
+      responses:
+        '200':
+          description: операция выполнена успешно
+        '500':
+          description: Invalid ID supplied
+    put:
+      tags:
+        - employees
+      summary: Обновление информации о сотруднике по ID
+      description: ''
+      parameters:
+        - name: Id
+          in: path
+          description: ID of pet that needs to be updated
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Операция выполнена успешно
+        '400':
+          description: Неправлиьный ввод
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+    delete:
+      tags:
+        - employees
+      summary: Удаление сотрудника
+      description: Удаление информации о сотруднике из БД
+      operationId: deletePet
+      parameters:
+        - name: Id
+          in: path
+          description: ID сотрудника для удаления
+      responses:
+        '200':
+          description: Операция успешно выполнена
+  
+  /tasks:
+    get:
+      tags:
+        - tasks
+      summary: Возвращает список задач
+      description: 
+      operationId: getInventory
+      responses:
+        '200':
+          description: successful operation
+          
+  /tasks.:
+    post:
+      tags:
+        - tasks
+      summary: Добавление новой задачи
+      description: Добавление новой задачи в БД. _Точка в роуте добавлена ошибочно!_
+      operationId: placeOrder
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid input
+  /tasks/{Id}:
+    get:
+      tags:
+        - tasks
+      summary: Поиск задачи по ID
+      description: 
+      operationId: getOrderById
+      parameters:
+        - name: Id
+          in: path
+          description: ID задачи для поиска
+      responses:
+        '200':
+          description: операция выполнена успешно
+        '500':
+          description: Неправильный ID задачи
+    
+  /tasks/{taskId}:
+    put:
+      tags:
+        - tasks
+      summary: Обновление информации о задаче по ID
+      description: 
+      operationId: getOrderById
+      parameters:
+        - name: Id
+          in: path
+          description: ID задачи для обновления
+      responses:
+        '200':
+          description: операция выполнена успешно
+        '500':
+          description: Неправильный ID задачи
+    delete:
+      tags:
+        - tasks
+      summary: Удаление задачи по ID
+      description: Удаление задачи из БД по ID
+      operationId: deleteOrder
+      parameters:
+        - name: orderId
+          in: path
+          description: ID задачи которую следует удалить
+      responses:
+        '200':
+          description: операция выполнена успешно
+  /task_dependence:
+    get:
+      tags:
+        - tasks
+      summary: Функция формирует перечень задач, которые зависят
+        от других и не взяты в работу
+      description: 
+      parameters:
+      responses:
+        '200':
+          description: операция выполнена успешно
+          content:
+  /task_parent:
+    get:
+      tags:
+        - tasks
+      summary: Функция формирует перечень задач, которые имеют родительские подзадачи и не взяты в работу
+      description: 
+      parameters:
+      responses:
+        '200':
+          description: операция выполнена успешно
+          content:
